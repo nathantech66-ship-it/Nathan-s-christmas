@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎄 Gamer Christmas</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Orbitron', sans-serif;
+}
+body {
+    background: radial-gradient(circle at top, #0f2027, #000);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+/* Confetti canvas */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+.container {
+    text-align: center;
+    padding: 30px;
+    animation: fadeIn 1.5s ease;
+    z-index: 2;
+}
+h1 {
+    font-size: 2.5rem;
+    color: #00ffea;
+    text-shadow: 0 0 15px #00ffea;
+    animation: glow 2s infinite alternate, bounce 2s infinite;
+}
+.name {
+    color: #ff005d;
+}
+p {
+    margin: 15px 0;
+    opacity: 0.9;
+}
+input {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    width: 80%;
+    max-width: 300px;
+    margin-top: 15px;
+}
+button {
+    margin-top: 15px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #00ffea, #ff005d);
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+button:hover {
+    transform: scale(1.08);
+}
+.link-box {
+    margin-top: 20px;
+    word-break: break-all;
+    font-size: 0.9rem;
+}
+/* Footer credit */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    opacity: 0.6;
+    z-index: 2;
+}
+/* Animations */
+@keyframes glow {
+    from { text-shadow: 0 0 10px #00ffea; }
+    to { text-shadow: 0 0 30px #00ffea; }
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="container">
+    <h1>💝Merry Christmas <span class="name" id="username">Buddies</span> 🎄</h1>
+    <p>Wishing you wins, joy, and legendary moments ✨</p>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <br>
+    <button onclick="generateLink()">Share My Link</button>
+    <div class="link-box" id="linkBox"></div>
+</div>
+<footer>
+    Developed by Nathan © 2025
+</footer>
+<script>
+/* ===== Developer Signature (DO NOT REMOVE) =====
+   Project: Gamer Christmas Page
+   Developer: Nathan
+   Year: 2025
+=============================================== */
+const params = new URLSearchParams(window.location.search);
+const nameFromURL = params.get("name");
+if (nameFromURL) {
+    document.getElementById("username").innerText = nameFromURL;
+}
+function generateLink() {
+    const name = document.getElementById("nameInput").value.trim();
+    if (!name) return alert("Enter your name 🎮");
+    const link = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+    
+    document.getElementById("linkBox").innerHTML = `
+        <p>🔥 Your Share Link:</p>
+        <p>${link}</p>
+        <button onclick="navigator.clipboard.writeText('${link}')">📋 Copy Link</button>
+    `;
+}
+/* Confetti Effect */
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+let confetti = [];
+for (let i = 0; i < 150; i++) {
+    confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        r: Math.random() * 6 + 4,
+        c: `hsl(${Math.random() * 360},100%,50%)`,
+        s: Math.random() * 3 + 2
+    });
+}
+function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confetti.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.c;
+        ctx.fill();
+        p.y += p.s;
+        if (p.y > canvas.height) p.y = -10;
+    });
+    requestAnimationFrame(drawConfetti);
+}
+drawConfetti();
+</script>
+</body>
+</html>
