@@ -6,164 +6,166 @@
 <title>🎄 Gamer Christmas</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Orbitron', sans-serif;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Orbitron',sans-serif;
 }
-body {
-    background: radial-gradient(circle at top, #0f2027, #000);
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+body{
+  background:radial-gradient(circle at top,#0f2027,#000);
+  color:#fff;
+  overflow-x:hidden;
 }
-/* Confetti canvas */
-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 1;
+/* CANVAS */
+canvas{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:1;
 }
-.container {
-    text-align: center;
-    padding: 30px;
-    animation: fadeIn 1.5s ease;
-    z-index: 2;
+section{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+  z-index:2;
+  position:relative;
 }
-h1 {
-    font-size: 2.5rem;
-    color: #00ffea;
-    text-shadow: 0 0 15px #00ffea;
-    animation: glow 2s infinite alternate, bounce 2s infinite;
+h1{
+  font-size:2.5rem;
+  color:#00ffea;
+  text-shadow:0 0 25px #00ffea;
+  animation:glow 2s infinite alternate,bounce 2s infinite;
 }
-.name {
-    color: #ff005d;
+.name{color:#ff005d;}
+p{margin:15px 0;opacity:.9;}
+input{
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  width:80%;
+  max-width:300px;
 }
-p {
-    margin: 15px 0;
-    opacity: 0.9;
+button{
+  margin-top:15px;
+  padding:12px 25px;
+  border:none;
+  border-radius:8px;
+  background:linear-gradient(90deg,#00ffea,#ff005d);
+  font-weight:bold;
+  cursor:pointer;
 }
-input {
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    width: 80%;
-    max-width: 300px;
-    margin-top: 15px;
+footer{
+  position:fixed;
+  bottom:8px;
+  width:100%;
+  text-align:center;
+  font-size:.7rem;
+  opacity:.6;
+  z-index:2;
 }
-button {
-    margin-top: 15px;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg, #00ffea, #ff005d);
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+@keyframes glow{
+  from{text-shadow:0 0 10px #00ffea;}
+  to{text-shadow:0 0 35px #00ffea;}
 }
-button:hover {
-    transform: scale(1.08);
-}
-.link-box {
-    margin-top: 20px;
-    word-break: break-all;
-    font-size: 0.9rem;
-}
-/* Footer credit */
-footer {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    font-size: 0.7rem;
-    opacity: 0.6;
-    z-index: 2;
-}
-/* Animations */
-@keyframes glow {
-    from { text-shadow: 0 0 10px #00ffea; }
-    to { text-shadow: 0 0 30px #00ffea; }
-}
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-15px);}
 }
 </style>
 </head>
 <body>
-<canvas id="confetti"></canvas>
-<div class="container">
-    <h1>💝Merry Christmas <span class="name" id="username">Buddies</span> 🎄</h1>
+<canvas id="effects"></canvas>
+<!-- SECTION 1 -->
+<section>
+  <div>
+    <h1>🎮 Merry Christmas 🎄</h1>
+    <p id="senderText"></p>
     <p>Wishing you wins, joy, and legendary moments ✨</p>
-    <input type="text" id="nameInput" placeholder="Enter your name">
+    <input id="yourName" placeholder="Enter your name">
     <br>
-    <button onclick="generateLink()">Share My Link</button>
-    <div class="link-box" id="linkBox"></div>
-</div>
+    <button onclick="continueFlow()">Continue</button>
+  </div>
+</section>
+<!-- SECTION 2 -->
+<section id="wishSection">
+  <div>
+    <h1 id="wishText"></h1>
+    <button onclick="shareLink()">🔗 Share Link</button>
+    <br>
+    <button onclick="shareWhatsApp()">📱 Share on WhatsApp</button>
+  </div>
+</section>
 <footer>
-    Developed by Nathan © 2025
+  Developed by Nathan © 2025
 </footer>
+<audio id="ding" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
 <script>
-/* ===== Developer Signature (DO NOT REMOVE) =====
-   Project: Gamer Christmas Page
-   Developer: Nathan
-   Year: 2025
-=============================================== */
-const params = new URLSearchParams(window.location.search);
-const nameFromURL = params.get("name");
-if (nameFromURL) {
-    document.getElementById("username").innerText = nameFromURL;
+/* ===== DEVELOPER SIGNATURE =====
+ Project: Gamer Christmas Experience
+ Developer: Nathan
+ Year: 2025
+=============================== */
+const params=new URLSearchParams(location.search);
+const from=params.get("from");
+const senderText=document.getElementById("senderText");
+if(from){
+  senderText.innerHTML=`🎁 This Christmas greeting was sent by <span class="name">${from}</span>`;
 }
-function generateLink() {
-    const name = document.getElementById("nameInput").value.trim();
-    if (!name) return alert("Enter your name 🎮");
-    const link = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
-    
-    document.getElementById("linkBox").innerHTML = `
-        <p>🔥 Your Share Link:</p>
-        <p>${link}</p>
-        <button onclick="navigator.clipboard.writeText('${link}')">📋 Copy Link</button>
-    `;
+let generatedLink="";
+function continueFlow(){
+  const name=document.getElementById("yourName").value.trim();
+  if(!name) return alert("Enter your name 🎮");
+  const displayName=from?from:name;
+  document.getElementById("wishText").innerHTML=
+    `<span class="name">${displayName}</span> wishes you a Merry Christmas 🎄✨`;
+  generatedLink=`${location.origin}${location.pathname}?from=${encodeURIComponent(name)}`;
+  document.getElementById("wishSection").scrollIntoView({behavior:"smooth"});
+  document.getElementById("ding").play();
 }
-/* Confetti Effect */
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let confetti = [];
-for (let i = 0; i < 150; i++) {
-    confetti.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        r: Math.random() * 6 + 4,
-        c: `hsl(${Math.random() * 360},100%,50%)`,
-        s: Math.random() * 3 + 2
-    });
+function shareLink(){
+  navigator.clipboard.writeText(generatedLink);
+  alert("Link copied! Paste it anywhere 🎄");
 }
-function drawConfetti() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    confetti.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = p.c;
-        ctx.fill();
-        p.y += p.s;
-        if (p.y > canvas.height) p.y = -10;
-    });
-    requestAnimationFrame(drawConfetti);
+function shareWhatsApp(){
+  const msg=`🎄 Merry Christmas! ${generatedLink}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
-drawConfetti();
+/* SNOW + CONFETTI */
+const c=document.getElementById("effects");
+const ctx=c.getContext("2d");
+c.width=innerWidth;
+c.height=innerHeight;
+let particles=[];
+for(let i=0;i<200;i++){
+  particles.push({
+    x:Math.random()*c.width,
+    y:Math.random()*c.height,
+    r:Math.random()*4+2,
+    s:Math.random()*2+1,
+    type:Math.random()>0.5?"snow":"confetti",
+    color:`hsl(${Math.random()*360},100%,50%)`
+  });
+}
+function animate(){
+  ctx.clearRect(0,0,c.width,c.height);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.type==="snow"?"#fff":p.color;
+    ctx.fill();
+    p.y+=p.s;
+    if(p.y>c.height)p.y=-10;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
 </script>
 </body>
 </html>
