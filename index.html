@@ -17,12 +17,16 @@ input{padding:12px;border-radius:8px;border:none;width:80%;max-width:300px;}
 button{margin-top:15px;padding:12px 25px;border:none;border-radius:8px;background:linear-gradient(90deg,#00ffea,#ff005d);font-weight:bold;cursor:pointer;}
 button:hover{transform:scale(1.05);}
 footer{position:fixed;bottom:8px;width:100%;text-align:center;font-size:.7rem;opacity:.6;z-index:2;}
+#musicBtn{position:fixed;top:10px;right:10px;z-index:10;padding:10px 15px;background:#00ffea;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
+#musicBtn:hover{transform:scale(1.05);}
 @keyframes glow{from{text-shadow:0 0 10px #00ffea;}to{text-shadow:0 0 35px #00ffea;}}
 @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
 </style>
 </head>
 <body>
 <canvas id="effects"></canvas>
+<!-- Music toggle button -->
+<button id="musicBtn">🔊 Play Music</button>
 <!-- SECTION 1: Welcome -->
 <section>
   <div>
@@ -55,36 +59,50 @@ footer{position:fixed;bottom:8px;width:100%;text-align:center;font-size:.7rem;op
  Developer: Nathan
  Year: 2025
 =============================== */
-const params=new URLSearchParams(location.search);
-const from=params.get("from");
-const senderText=document.getElementById("senderText");
-const wishSection=document.getElementById("wishSection");
-const wishText=document.getElementById("wishText");
-const bgMusic=document.getElementById("bgMusic");
+const params = new URLSearchParams(location.search);
+const from = params.get("from");
+const senderText = document.getElementById("senderText");
+const wishSection = document.getElementById("wishSection");
+const wishText = document.getElementById("wishText");
+const bgMusic = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 if(from){
-  senderText.innerHTML=`🎁 This Christmas greeting was sent by <span class="name">${from}</span>`;
+  senderText.innerHTML = `🎁 This Christmas greeting was sent by <span class="name">${from}</span>`;
 }
-let generatedLink="";
+let generatedLink = "";
+// Continue button click
 function continueFlow(){
-  const name=document.getElementById("yourName").value.trim();
+  const name = document.getElementById("yourName").value.trim();
   if(!name) return alert("Enter your name 🎮");
-  const displayName=from?from:name;
-  wishText.innerHTML=`<span class="name">${displayName}</span> wishes you a Merry Christmas 🎄✨❤️`;
-  const baseURL=location.href.split("?")[0];
-  generatedLink=`${baseURL}?from=${encodeURIComponent(name)}`;
+  const displayName = from ? from : name;
+  wishText.innerHTML = `<span class="name">${displayName}</span> wishes you a Merry Christmas 🎄✨❤️`;
+  const baseURL = location.href.split("?")[0];
+  generatedLink = `${baseURL}?from=${encodeURIComponent(name)}`;
   wishSection.scrollIntoView({behavior:"smooth"});
   document.getElementById("ding").play();
-  // Play background music after user interaction
-  bgMusic.play().catch(e=>console.log("Audio blocked:", e));
+  // Try to play music
+  const playPromise = bgMusic.play();
+  if(playPromise !== undefined){
+    playPromise.then(()=>console.log("Music started ✅"))
+    .catch(error=>{
+      console.log("Music blocked ❌, tap 🔊 button", error);
+    });
+  }
 }
+// Share functions
 function shareLink(){
   navigator.clipboard.writeText(generatedLink);
   alert("Link copied! Paste it anywhere 🎄");
 }
 function shareWhatsApp(){
-  const msg=`🎄 Merry Christmas! ${generatedLink}`;
+  const msg = `🎄 Merry Christmas! ${generatedLink}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
+// Music button
+musicBtn.addEventListener("click",()=>{
+  bgMusic.play();
+  musicBtn.style.display = "none";
+});
 /* 🎉 SNOW + EMOJI CONFETTI EFFECTS */
 const c=document.getElementById("effects");
 const ctx=c.getContext("2d");
@@ -117,7 +135,7 @@ function animate(){
     }
     p.y+=p.s;
     if(p.y>c.height)p.y=-10;
-    p.x+=Math.sin(Date.now()/1000+p.y)*0.5; // slight horizontal drift
+    p.x+=Math.sin(Date.now()/1000+p.y)*0.5;
   });
   requestAnimationFrame(animate);
 }
