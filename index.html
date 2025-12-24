@@ -3,97 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎄 Gamer Christmas</title>
+<title>🎄 Ultimate Gamer Christmas</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Orbitron',sans-serif;
-}
-body{
-  background:radial-gradient(circle at top,#0f2027,#000);
-  color:#fff;
-  overflow-x:hidden;
-}
-/* CANVAS */
-canvas{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:1;
-}
-section{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:30px;
-  z-index:2;
-  position:relative;
-}
-h1{
-  font-size:2.5rem;
-  color:#00ffea;
-  text-shadow:0 0 25px #00ffea;
-  animation:glow 2s infinite alternate,bounce 2s infinite;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif;}
+body{background:radial-gradient(circle at top,#0f2027,#000);color:#fff;overflow-x:hidden;}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;}
+section{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:2;position:relative;}
+h1{font-size:2.5rem;color:#00ffea;text-shadow:0 0 25px #00ffea;animation:glow 2s infinite alternate,bounce 2s infinite;}
 .name{color:#ff005d;}
 p{margin:15px 0;opacity:.9;}
-input{
-  padding:12px;
-  border-radius:8px;
-  border:none;
-  width:80%;
-  max-width:300px;
-}
-button{
-  margin-top:15px;
-  padding:12px 25px;
-  border:none;
-  border-radius:8px;
-  background:linear-gradient(90deg,#00ffea,#ff005d);
-  font-weight:bold;
-  cursor:pointer;
-}
-footer{
-  position:fixed;
-  bottom:8px;
-  width:100%;
-  text-align:center;
-  font-size:.7rem;
-  opacity:.6;
-  z-index:2;
-}
-@keyframes glow{
-  from{text-shadow:0 0 10px #00ffea;}
-  to{text-shadow:0 0 35px #00ffea;}
-}
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-15px);}
-}
+input{padding:12px;border-radius:8px;border:none;width:80%;max-width:300px;}
+button{margin-top:15px;padding:12px 25px;border:none;border-radius:8px;background:linear-gradient(90deg,#00ffea,#ff005d);font-weight:bold;cursor:pointer;}
+button:hover{transform:scale(1.05);}
+footer{position:fixed;bottom:8px;width:100%;text-align:center;font-size:.7rem;opacity:.6;z-index:2;}
+@keyframes glow{from{text-shadow:0 0 10px #00ffea;}to{text-shadow:0 0 35px #00ffea;}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);}}
 </style>
 </head>
 <body>
 <canvas id="effects"></canvas>
-<!-- SECTION 1 -->
+<!-- SECTION 1: Welcome -->
 <section>
   <div>
-    <h1>🎮 Merry Christmas 🎄</h1>
+    <h1>🎄 Merry Christmas! 🎄</h1>
     <p id="senderText"></p>
-    <p>Wishing you wins, joy, and legendary moments ✨</p>
+    <p>Wishing you wins, joy, and legendary moments ✨❤️</p>
     <input id="yourName" placeholder="Enter your name">
     <br>
     <button onclick="continueFlow()">Continue</button>
   </div>
 </section>
-<!-- SECTION 2 -->
+<!-- SECTION 2: Wish -->
 <section id="wishSection">
   <div>
     <h1 id="wishText"></h1>
@@ -105,16 +46,21 @@ footer{
 <footer>
   Developed by Nathan © 2025
 </footer>
+<!-- 🎵 Music -->
+<audio id="bgMusic" src="https://assets.mixkit.co/sfx/preview/mixkit-jingle-bells-1442.mp3" loop></audio>
 <audio id="ding" src="https://assets.mixkit.co/sfx/preview/mixkit-game-level-completed-2059.mp3"></audio>
 <script>
 /* ===== DEVELOPER SIGNATURE =====
- Project: Gamer Christmas Experience
+ Project: Ultimate Gamer Christmas
  Developer: Nathan
  Year: 2025
 =============================== */
 const params=new URLSearchParams(location.search);
 const from=params.get("from");
 const senderText=document.getElementById("senderText");
+const wishSection=document.getElementById("wishSection");
+const wishText=document.getElementById("wishText");
+const bgMusic=document.getElementById("bgMusic");
 if(from){
   senderText.innerHTML=`🎁 This Christmas greeting was sent by <span class="name">${from}</span>`;
 }
@@ -123,11 +69,13 @@ function continueFlow(){
   const name=document.getElementById("yourName").value.trim();
   if(!name) return alert("Enter your name 🎮");
   const displayName=from?from:name;
-  document.getElementById("wishText").innerHTML=
-    `<span class="name">${displayName}</span> wishes you a Merry Christmas 🎄✨`;
-  generatedLink=`${location.origin}${location.pathname}?from=${encodeURIComponent(name)}`;
-  document.getElementById("wishSection").scrollIntoView({behavior:"smooth"});
+  wishText.innerHTML=`<span class="name">${displayName}</span> wishes you a Merry Christmas 🎄✨❤️`;
+  const baseURL=location.href.split("?")[0];
+  generatedLink=`${baseURL}?from=${encodeURIComponent(name)}`;
+  wishSection.scrollIntoView({behavior:"smooth"});
   document.getElementById("ding").play();
+  // Play background music after user interaction
+  bgMusic.play().catch(e=>console.log("Audio blocked:", e));
 }
 function shareLink(){
   navigator.clipboard.writeText(generatedLink);
@@ -137,31 +85,39 @@ function shareWhatsApp(){
   const msg=`🎄 Merry Christmas! ${generatedLink}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`);
 }
-/* SNOW + CONFETTI */
+/* 🎉 SNOW + EMOJI CONFETTI EFFECTS */
 const c=document.getElementById("effects");
 const ctx=c.getContext("2d");
 c.width=innerWidth;
 c.height=innerHeight;
 let particles=[];
+const emojis=["🎄","🎁","❄️","❤️","✨","🎅"];
 for(let i=0;i<200;i++){
   particles.push({
     x:Math.random()*c.width,
     y:Math.random()*c.height,
     r:Math.random()*4+2,
-    s:Math.random()*2+1,
-    type:Math.random()>0.5?"snow":"confetti",
+    s:Math.random()*1.5+0.5,
+    type:Math.random()>0.5?"snow":"emoji",
+    emoji: emojis[Math.floor(Math.random()*emojis.length)],
     color:`hsl(${Math.random()*360},100%,50%)`
   });
 }
 function animate(){
   ctx.clearRect(0,0,c.width,c.height);
   particles.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.type==="snow"?"#fff":p.color;
-    ctx.fill();
+    if(p.type==="snow"){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle="#fff";
+      ctx.fill();
+    }else{
+      ctx.font="24px Arial";
+      ctx.fillText(p.emoji,p.x,p.y);
+    }
     p.y+=p.s;
     if(p.y>c.height)p.y=-10;
+    p.x+=Math.sin(Date.now()/1000+p.y)*0.5; // slight horizontal drift
   });
   requestAnimationFrame(animate);
 }
